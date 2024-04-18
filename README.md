@@ -1,0 +1,2 @@
+# Spring-Boot-JPA-H2
+ Um projeto que utiliza o framework Spring para o gerenciamento de usuários de um sistema. Se trata de um  projeto backend baseado em Rest API, ou seja, são disponibilizados os endpoints necessários para realizar as operações de gerenciamento de usuários (CRUD). O projeto é MVC e foi necessário realizar o modelo logico para a criação da base de dados, bem como a conexão com o mesmo. Além da logica base, foi necessário realizar os tratamentos de exceções.
