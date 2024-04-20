@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.edutec.usuario.entities.User;
 import com.edutec.usuario.services.UserService;
-import com.edutec.usuario.services.UserServiceImpl;
 
 @RestController
 @RequestMapping("/users")
@@ -28,48 +27,62 @@ public class UserResource {
 	    private UserService userService;
 	 	
 	 	@Autowired
-	    private UserServiceImpl userServiceImpl;
-	 	
-	 	@Autowired
 		private ModelMapper modelMapper;
 	    
-	    @GetMapping
-	    @ResponseStatus(HttpStatus.OK)
-	    public List<User> findAll() {
-	        return userService.findAll();
-	    }
-	    
-	    @GetMapping("/{id}")
-	    @ResponseStatus(HttpStatus.OK)
-	    public User findById(@PathVariable("id") Long id) {
-	        return userService.findById(id)
-	                   .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
-	    }
-	    
-	    @PostMapping
-	    @ResponseStatus(HttpStatus.CREATED)
-	    public User insert(@RequestBody User user) {
-	        return userService.insert(user);
-	    }
-	    
-	    @DeleteMapping("/{id}")
-		@ResponseStatus(HttpStatus.NO_CONTENT)
-		public void delete(@PathVariable("id") Long id) {
-			userService.findById(id)
-				.map(cliente -> {
-					userService.delete(cliente.getId());
-					return Void.TYPE;
-				}) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+	    @GetMapping("/cliente/{id}")
+		public Long getClienteId(@PathVariable Long id) {
+			User user = userService.buscarPorId(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado."));
+			return user.getId();
 		}
-	    
-	    @PutMapping("/{id}")
+		
+		@GetMapping("/cliente/{nome}")
+		public User getClienteNome(@PathVariable String nome) {
+			User user = userService.buscarPorNome(nome)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado."));
+			return user;
+		}
+
+		@PostMapping
+		@ResponseStatus(HttpStatus.CREATED)
+		public User salvar(@RequestBody User user) {
+			if (user.getNome() == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome do cliente é obrigatório.");
+			}
+			return userService.salvar(user);
+		}
+		
+		@GetMapping
+		@ResponseStatus(HttpStatus.OK)
+		public List<User> listaCliente() {
+			return userService.listaCliente();
+		}
+		
+		@GetMapping("/{id}")
+		@ResponseStatus(HttpStatus.OK)
+		public User buscarClientePorId(@PathVariable("id") Long id) {
+			return userService.buscarPorId(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado."));
+		}
+		
+		@DeleteMapping("/{id}")
 		@ResponseStatus(HttpStatus.NO_CONTENT)
-		public void update(@PathVariable("id") Long id, @RequestBody User user) {
-			userService.findById(id)
+		public void removerCliente(@PathVariable("id") Long id) {
+			userService.buscarPorId(id)
+				.map(user -> {
+					userService.removerPorId(user.getId());
+					return Void.TYPE;
+				}) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado."));
+		}
+		
+		@PutMapping("/{id}")
+		@ResponseStatus(HttpStatus.NO_CONTENT)
+		public void atualizarCliente(@PathVariable("id") Long id, @RequestBody User user) {
+			userService.buscarPorId(id)
 				.map(userBase -> {
 					modelMapper.map(user, userBase);
-					userServiceImpl.salvar(userBase);
+					userService.salvar(userBase);
 					return Void.TYPE;
-				}) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+				}) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado."));
 		}
 }
