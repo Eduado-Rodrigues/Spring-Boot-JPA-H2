@@ -16,7 +16,6 @@ public class UsuarioApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(UsuarioApplicationApplication.class, args);
+		SpringApplication.run(UsuarioApplication.class, args);
 	}
-
 }

@@ -20,8 +20,6 @@ import java.util.Objects;
 @Table(name = "tb_user")
 public class User implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -41,17 +39,17 @@ public class User implements Serializable {
 	public User() {
 	}
 	
-	public User(Long id, String nome, String email, String telefone, String password) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
-        this.password = password;
-    }
-
+	// public User(Long id, String nome, String email, String telefone, String password) {
+	// 	this.id = id;
+	// 	this.nome = nome;
+	// 	this.email = email;
+	// 	this.telefone = telefone;
+	// 	this.password = password;
+	// }
+	
 	public User(String nome, String email, String telefone, String senha) {
-        this(null, nome, email, telefone, senha);
-    }
+		this(null, nome, email, telefone, senha);
+	}
 
 	public Long getId() {
 		return id;
